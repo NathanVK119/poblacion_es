@@ -1,0 +1,83 @@
+-- Create the main database
+CREATE DATABASE IF NOT EXISTS poblacion;
+USE poblacion;
+
+-- Users table for authentication
+CREATE TABLE IF NOT EXISTS users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(50) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    role VARCHAR(20) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Students table for registration
+CREATE TABLE IF NOT EXISTS students (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    student_id VARCHAR(20) UNIQUE,
+    first_name VARCHAR(50) NOT NULL,
+    middle_name VARCHAR(50),
+    last_name VARCHAR(50) NOT NULL,
+    birth_date DATE,
+    gender VARCHAR(10),
+    address TEXT,
+    contact_number VARCHAR(20),
+    email VARCHAR(100),
+    parent_guardian VARCHAR(100),
+    parent_contact VARCHAR(20),
+    enrollment_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    status VARCHAR(20) DEFAULT 'Active'
+);
+
+-- Folders table for file organization
+CREATE TABLE IF NOT EXISTS folders (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    parent_id INT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (parent_id) REFERENCES folders(id) ON DELETE CASCADE
+);
+
+-- Files table for document management
+CREATE TABLE IF NOT EXISTS files (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    filename VARCHAR(255) NOT NULL,
+    filepath VARCHAR(255) NOT NULL,
+    folder_id INT,
+    uploaded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (folder_id) REFERENCES folders(id) ON DELETE CASCADE
+);
+
+-- Insert default admin user (password: admin)
+INSERT IGNORE INTO users (username, password, role) VALUES 
+('admin', '$2y$10$8VyX5GfE9EXdVz4gjvP2f.vtKh.HyP0Qw2QxfUAaI4fJQvUYDKGOW', 'admin');
+
+-- Add indexes for better performance
+ALTER TABLE students ADD INDEX idx_student_id (student_id);
+ALTER TABLE students ADD INDEX idx_name (last_name, first_name);
+ALTER TABLE files ADD INDEX idx_folder (folder_id);
+ALTER TABLE files ADD INDEX idx_upload_date (uploaded_at);
+ALTER TABLE folders ADD INDEX idx_parent (parent_id);
+
+-- Sample queries for reference:
+
+-- Get all students
+-- SELECT * FROM students ORDER BY last_name, first_name;
+
+-- Get files in a folder
+-- SELECT * FROM files WHERE folder_id = [folder_id] ORDER BY uploaded_at DESC;
+
+-- Get folder hierarchy
+-- SELECT f1.*, f2.name as parent_name 
+-- FROM folders f1 
+-- LEFT JOIN folders f2 ON f1.parent_id = f2.id;
+
+-- Get user by username
+-- SELECT * FROM users WHERE username = '[username]';
+
+-- Notes:
+-- 1. Run this file using: mysql -u root -p < database.txt
+-- 2. Default admin credentials: username=admin, password=admin
+-- 3. All tables use InnoDB engine for transaction support
+-- 4. UTF-8 character set is used by default
+-- 5. Cascading deletes are enabled for folder/file relationships 

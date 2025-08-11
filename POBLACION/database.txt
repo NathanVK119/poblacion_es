@@ -1,0 +1,47 @@
+database name 'poblacion'
+
+CREATE TABLE `poblacion` (
+  `lrn` varchar(100) NOT NULL,
+  `name` varchar(100) NOT NULL,
+  `sex` varchar(100) NOT NULL,
+  `birthday` varchar(100) NOT NULL,
+  `age` varchar(100) NOT NULL,
+  `mother_tongue` varchar(100) NOT NULL,
+  `ip` varchar(100) NOT NULL,
+  `religion` varchar(100) NOT NULL,
+  `house_number` varchar(100) NOT NULL,
+  `barangay` varchar(100) NOT NULL,
+  `municipality` varchar(100) NOT NULL,
+  `province` varchar(100) NOT NULL,
+  `region` varchar(100) NOT NULL,
+  `father` varchar(100) NOT NULL,
+  `mother` varchar(100) NOT NULL,
+  `guardian_name` varchar(100) NOT NULL,
+  `relationship` varchar(100) NOT NULL,
+  `contact` varchar(20) NOT NULL,
+  `learning_modality` varchar(100) NOT NULL,
+  `sy` varchar(100) NOT NULL,
+  `grade` varchar(100) NOT NULL,
+  `section` varchar(100) NOT NULL,
+  `adviser` varchar(100) NOT NULL,
+  `status` varchar(100) NOT NULL,
+  `remarks` varchar(255) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `timestamp` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci
+
+CREATE TABLE `folders` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  `parent_id` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=58 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci
+
+CREATE TABLE `files` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `folder_id` int(11) DEFAULT NULL,
+  `filename` varchar(255) NOT NULL,
+  `filepath` varchar(255) NOT NULL,
+  `uploaded_at` datetime DEFAULT current_timestamp(),
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci
